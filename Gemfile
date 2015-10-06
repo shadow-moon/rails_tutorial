@@ -3,6 +3,8 @@
 source 'https://rubygems.org'
 
 gem "middleman", "~>3.4.0"
+gem 'bootstrap-sass', require: nil
+gem 'kramdown'
 
 # Live-reloading plugin
 gem "middleman-livereload", "~> 3.1.0"
