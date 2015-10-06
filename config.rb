@@ -53,6 +53,8 @@ set :js_dir, 'javascripts'
 
 set :images_dir, 'images'
 
+activate :syntax
+
 set :markdown_engine, :kramdown
 
 # Build-specific configuration
