@@ -4,8 +4,11 @@ title: コメントを投稿できるようにしよう
 
 # コメントを投稿できるようにしよう
 
-上では単に記事を投稿できるだけであった。
+ここまででは単に記事を投稿できるだけであった。
 今度は、個別にモデルとコントローラーを作成し、記事ごとにコメントを投稿できるようにする。
+
+* TOC
+{:toc}
 
 ## Commentモデルを作る
 
@@ -26,9 +29,11 @@ title: コメントを投稿できるようにしよう
 
 `config/routes.rb` を開き、下記のように編集。
 
+~~~ruby
     resources :posts do
       resources :comments, only: [:create]
     end
+~~~
 
 `resources` をネストさせることで、特定の記事に限定したコメントを追加するためのURLを定義できる。具体的には、
 
@@ -51,14 +56,80 @@ title: コメントを投稿できるようにしよう
 
 具体的には、 `app/models/post.rb` を下記のように編集し、
 
+~~~ruby
     class Post < ActiveRecord::Base
       has_many :comments
     end
+~~~
 
 `app/models/comment.rb` も下記のように編集する。
 
+~~~ruby
     class Comment < ActiveRecord::Base
       belogns_to :post
     end
+~~~
+
+## コメントを投稿するフォームを作る
+
+`app/views/posts/show.html.erb` を開き、下記のフォームを追加する。
+
+~~~eruby
+...
+</p>
+
+<%= form_for([@post, @comment]) do |f| %>
+  <%= f.label :email %>
+  <%= f.text_field :email %>
+
+  <%= f.label :body %>
+  <%= f.text_area :body %>
+
+  <%= f.submit 'Post a comment' %>
+<% end %>
+...
+~~~
+
+`app/controllers/posts_controller.rb` の`show`アクションを次のように編集する。
+
+~~~ruby
+def show
+  @comment = @post.comments.build
+end
+~~~
 
 
+## コメントを保存するコントローラーを実装
+
+`app/controllers/comments_controller.rb` を編集する。
+
+~~~ruby
+class CommentsController < ApplicationController
+  def create
+    @post = Post.find(params[:post_id])
+    @comment = @post.comments.create(params.require(:comment).permit(:email, :body))
+
+    redirect_to post_path(@post)
+  end
+end
+~~~
+
+ここで、`./bin/rails server` を起動して、コメントを投稿してみよう。
+この時点で投稿はできるが、表示されない。
+
+
+## 投稿したコメントを表示する。
+
+`app/views/posts/show.html.erb` に先ほど追加したコメント投稿フォームの下に、下記のコードを追加する。
+
+~~~eruby
+  <%= f.submit 'Post a comment' %>
+<% end %>
+
+<ul>
+  <%= @post.comments.each do |comment| %>
+    <li><%= comment.body %> by <%= comment.email %></li>
+  <% end %>
+</ul>
+
+~~~
