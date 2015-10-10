@@ -1,0 +1,16 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "box-cutter/ubuntu1404-desktop"
+
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo apt-get update
+    sudo apt-get install -y \
+                build-essential openssl libreadline6 libreadline6-dev curl git-core \
+                zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 \
+                libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake \
+                libtool bison subversion pkg-config
+    id
+  SHELL
+end
