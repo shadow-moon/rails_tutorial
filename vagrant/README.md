@@ -19,7 +19,7 @@ git clone https://github.com/shadow-moon/rails_tutorial.git
 cd rails_tutorial/vagrant
 ```
 
-または、githubからzipでダウンロードし、展開します。
+または、[githubからzipでダウンロード](https://github.com/shadow-moon/rails_tutorial/archive/master.zip)し、展開します。
 
 
 ## `vagrant` コマンドを使いVMを作る
